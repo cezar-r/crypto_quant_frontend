@@ -25,7 +25,7 @@ const ChartOptions = ({ selectedTicker, onTickerSelect }) => {
 
     return (
         <div>
-            <div className="bg-gray-800 h-screen p-4 overflow-y-auto">
+            <div className="bg-gray-800 h-screen px-4 overflow-y-auto">
                 <div className="relative mb-4 w-full text-gray-400 focus-within:text-gray-600">
                     <SearchIcon className="absolute w-5 h-5 top-1/2 left-3 transform -translate-y-1/2" />
 
@@ -40,7 +40,7 @@ const ChartOptions = ({ selectedTicker, onTickerSelect }) => {
                 {options.map((ticker) => (
                     <div
                         key={ticker}
-                        className={`p-2 ${selectedTicker === ticker ? 'bg-gray-500' : 'bg-gray-600'} my-2 text-white rounded cursor-pointer hover:bg-gray-700`}
+                        className={`p-2 ${selectedTicker === ticker ? 'bg-gray-600' : 'bg-gray-700'} my-2 text-white rounded cursor-pointer hover:bg-gray-900`}
                         onClick={() => onTickerSelect(ticker)}
                     >
                         {tickerToNameMapper[ticker]}

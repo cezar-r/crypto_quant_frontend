@@ -7,7 +7,6 @@ import ChartView from './components/chart/ChartView';
 
 const Charts = () => {
     const location = useLocation();
-    console.log(location.state.userData);
 
     const [selectedTicker, setSelectedTicker] = useState(location.state.ticker);
     const userData = JSON.parse(location.state.userData);
@@ -17,9 +16,9 @@ const Charts = () => {
     }
 
     return (
-        <div className="bg-gray-800">
+        <div className="bg-gray-800 h-full overflow-y-auto ">
             <TopNav userData={userData} />
-            <div className="flex h-screen overflow-y-auto bg-gray-700 mt-2">
+            <div className="flex bg-gray-800 mt-4">
                 <div className="w-1/5">
                     <ChartOptions selectedTicker={selectedTicker} onTickerSelect={onTickerSelect} />
                 </div>

@@ -4,7 +4,7 @@ import {riskToColor, riskToColorTransparency} from "./helpers/riskToColor";
 
 const RiskCard = ({ ticker, risk, price, change, onClick }) => {
     return (
-        <div className="bg-[#131a24] text-white shadow-md rounded-lg py-4 px-4 ml-6 mr-6 mb-8 mt-4  flex flex-col justify-between h-full hover:bg-[#17202e] hover:shadow-lg cursor-pointer"
+        <div className="bg-[#131a24] text-white shadow-md rounded-lg py-4 px-4 ml-6 mr-6 mb-8 mt-4  flex flex-col justify-between h-full hover:bg-[#17202e] hover:shadow-custom transition duration-800 ease-out cursor-pointer"
             onClick={() => onClick(ticker)}>
             <div className="flex justify-between items-start">
                 <h2 className="">{tickerToNameMapper[ticker]}</h2>
@@ -27,7 +27,6 @@ const RiskCard = ({ ticker, risk, price, change, onClick }) => {
 
 
 const StaticRiskCards = ({data, handleChartsClick}) => {
-    console.log(data);
     return (
         <div className="flex justify-center items-center flex-wrap">
             {data.map((item, index) => (

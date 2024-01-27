@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NewAlertPopup from './components/NewAlertPopup';
 import createNewSubscription from './services/createNewSubscription';
+import deleteSubscription from './services/deleteSubscription';
 import getDashboardDataForUser from './services/getDashboardDataForUser';
 import generateUUID from './components/helpers/generateUUID';
 import DashboardTable from './components/DashboardTable';
@@ -39,6 +40,17 @@ const Dashboard = () => {
 
     const handleNewAlertPopupClose = () => {
         setNewAlertPopup(false);
+    };
+
+    const handleDeleteAlert = async (subscription) => {
+        console.log("Deleting");
+        console.log(subscription);
+
+        const payload = {
+            "subscription_id": subscription['id']
+        }
+        deleteSubscription(payload);
+        setTimeout(() => setRefreshData(prev => !prev), 1000);
     };
 
     const handleNewAlertPopupSave = async (alertData) => {
@@ -86,6 +98,7 @@ const Dashboard = () => {
                                 handleNewAlertPopupClose={handleNewAlertPopupClose}
                                 handleNewAlertPopupSave={handleNewAlertPopupSave}
                                 handleChartsClick={handleChartsClick}
+                                handleDeleteAlert={handleDeleteAlert}
                                 />
             </div>
             {newAlertPopup && (

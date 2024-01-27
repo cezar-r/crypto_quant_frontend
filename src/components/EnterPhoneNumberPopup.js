@@ -18,7 +18,6 @@ const EnterPhoneNumberPopup = () => {
         navigate('/dashboard', { state: { userData: userData.body } })
     };
 
-
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75">
             <div className="bg-gray-700 py-10 px-8 rounded-lg shadow-lg">

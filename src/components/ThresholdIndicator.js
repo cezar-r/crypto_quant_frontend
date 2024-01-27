@@ -3,7 +3,6 @@ import {riskToColor, riskToColorTransparency} from './helpers/riskToColor';
 
 
 const ThresholdIndicator = ({ value }) => {
-    console.log(value);
     const color = riskToColor(value); // Get the color as RGB
     const bgColor = riskToColorTransparency(value); // Get the background color as RGBA with transparency
 

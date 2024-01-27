@@ -32,4 +32,3 @@ const riskToColorTransparency = (value, transparency=0.2) => {
 }
 
 export { riskToColor, riskToColorTransparency };
-

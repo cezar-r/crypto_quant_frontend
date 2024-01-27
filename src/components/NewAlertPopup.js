@@ -17,14 +17,6 @@ const NewAlertPopup = ({ onClose, onSave }) => {
 
     const theme = useTheme();
 
-    const handleRiskThresholdChange = (event) => {
-        setRiskThreshold(event.target.value);
-    };
-
-    const handleMaxMessagesChange = (event) => {
-        setMaxMessages(event.target.value);
-    };
-
     const handleCancel = () => {
         onClose();
     };
@@ -48,7 +40,7 @@ const NewAlertPopup = ({ onClose, onSave }) => {
                         setTicker(newValue);
                     }}
                     options={options}
-                    style={{ width: 300, marginBottom: "32px" }} // Adjust the width as needed
+                    style={{ width: 300, marginBottom: "32px" }}
                     renderInput={(params) => (
                         <TextField 
                             {...params} 

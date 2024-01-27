@@ -104,21 +104,19 @@ const ChartView = ({ selectedTicker }) => {
 
     useEffect(() => {
         if (selectedTicker && d3Container.current) {
-            // Initial fetch with limit
-            fetchCryptoPriceData(selectedTicker, 210).then(data => {
+            fetchCryptoPriceData(selectedTicker, timeframeToDatapointsMapper[timeframe] + 20).then(data => {
                 drawChart(data);
                 setFullData(data); 
-                setInitialDataLoaded(true);  // Set initial data loaded to true
+                setInitialDataLoaded(true);
             });
 
-            // Full fetch without limit
             if (initialDataLoaded) {
                 fetchCryptoPriceData(selectedTicker).then(data => {
-                    setFullData(data);  // Update the state with the full dataset
+                    setFullData(data);
                 });
             }
         }
-    }, [selectedTicker, initialDataLoaded]);  // Depend on `initialDataLoaded` to trigger the second fetch
+    }, [selectedTicker, initialDataLoaded]);
 
     useEffect(() => {
         console.log(fullData);
@@ -126,9 +124,6 @@ const ChartView = ({ selectedTicker }) => {
             drawChart(fullData);
         }
     }, [fullData]);
-
-    console.log(fullData);
-    console.log(timeframe);
 
     return (
         <div className='bg-gray-800 h-screen overflow-y-auto'>
