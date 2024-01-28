@@ -1,4 +1,3 @@
-// ChartOptions.js
 import React, {useState} from 'react';
 import TickerImage from '../TickerImage';
 import tickerList from '../constants/tickerList';

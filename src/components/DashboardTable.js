@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar } from '@mui/material';
-import { Tooltip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Fab, Typography, IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 
-import {riskToColor, riskToColorTransparency} from './helpers/riskToColor';
+import {riskToColor} from './helpers/riskToColor';
 import TickerImage from './TickerImage';
 import NewAlertPopup from './NewAlertPopup';
 import tickerToNameMapper from './helpers/mapTickerToName';

@@ -14,26 +14,34 @@ const Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const userData = JSON.parse(location.state.userData);
-    
+    let initialUserData = location.state ? JSON.parse(location.state.userData) : null;
+    if (!initialUserData) {
+        const userDataString = localStorage.getItem('userData');
+        initialUserData = userDataString ? JSON.parse(userDataString) : null;
+    }
+
+    const [userData, setUserData] = useState(initialUserData);
     const [dashboardData, setDashboardData] = useState([]);
     const [staticData, setStaticData] = useState([]);
     const [newAlertPopup, setNewAlertPopup] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
-
-
-    const fetchDashboardData = async () => {
-        setShowLoading(true);
-        const data = await getDashboardDataForUser({ "user_data": userData });
-        setDashboardData(data.tableData);
-        setStaticData(data.staticData);
-        setShowLoading(false);
-    };
     
     useEffect(() => {
-        fetchDashboardData();
-    }, [refreshData]); 
+        if (!userData) {
+            navigate('/');
+        } else {
+            const fetchDashboardData = async () => {
+                setShowLoading(true);
+                const data = await getDashboardDataForUser({ "user_data": userData });
+                setDashboardData(data.tableData);
+                setStaticData(data.staticData);
+                setShowLoading(false);
+            };
+
+            fetchDashboardData();
+        }
+    }, [refreshData, userData, navigate]);
 
 
     const handleNewAlertPopupOpen = () => {
