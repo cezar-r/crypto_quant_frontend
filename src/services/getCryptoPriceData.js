@@ -1,6 +1,6 @@
 const getCryptoPriceData =  async (args) => {
     try {
-        const response = await fetch('https://t63br8172g.execute-api.us-east-2.amazonaws.com/prod/getCryptoPriceData', {
+        const response = await fetch(process.env.REACT_APP_GET_CRYPTO_DATA_URL, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

@@ -136,8 +136,6 @@ const ChartView = ({ selectedTicker }) => {
         }
     }, [fullData]);
 
-    console.log(initialDataLoaded);
-
     return (
         <div className='bg-gray-800 h-screen overflow-y-auto mr-6'>
             <div className="bg-gray-900 text-white h-1/5 p-4">

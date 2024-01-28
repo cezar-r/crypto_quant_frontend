@@ -1,6 +1,6 @@
 const getDashboardDataForUser = async (userData) => {
     try {
-        const response = await fetch('https://xy9kuuqpo4.execute-api.us-east-2.amazonaws.com/prod/getDashboardData', {
+        const response = await fetch(process.env.REACT_APP_GET_DASHBOARD_DATA_URL, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

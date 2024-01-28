@@ -162,12 +162,10 @@ const DashboardTable = ({data, userData, newAlertPopup, setNewAlertPopup, handle
 
     const confirmDelete = () => {
         handleDeleteAlert(selectedSubscription);
-        console.log("Deleting subscription", selectedSubscription);
         setOpenDialog(false);
     };
     
     const dashboardData = data;
-    console.log(dashboardData);
     if (dashboardData.length > 0) {
         return (
                 <StyledTableContainer component={Paper}>

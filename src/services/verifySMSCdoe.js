@@ -1,6 +1,6 @@
 const verifySMSCode =  async (payload) => {
     try {
-        const response = await fetch('https://23fi2yd3q4.execute-api.us-east-2.amazonaws.com/prod/verifySMSCode', {
+        const response = await fetch(process.env.REACT_APP_VERIFY_SMS_CODE_URL, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

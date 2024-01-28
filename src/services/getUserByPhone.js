@@ -1,6 +1,6 @@
 const getUserByPhone = async (phoneNumber) => {
     try {
-        const response = await fetch('https://0sx9lvp9kd.execute-api.us-east-2.amazonaws.com/prod/user?phoneNumber=' + phoneNumber, {
+        const response = await fetch(process.env.REACT_APP_GET_USER_URL + phoneNumber, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

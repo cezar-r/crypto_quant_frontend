@@ -27,7 +27,7 @@ const TopNav = ({ userData }) => {
     return (
         <div className="bg-[#090E15] flex justify-between items-center pt-1 px-1 py-2">
             <div>
-                <button onClick={handleDashboardClick} className="text-lg font-semibold text-teal-400 py-3 px-6 hover:bg-[#17202e] hover:underline rounded">
+                <button onClick={handleDashboardClick} className="text-lg font-semibold text-teal-400 py-3 px-6 ml-4 hover:bg-[#17202e] hover:underline rounded">
                     Dashboard
                 </button>
                 <button onClick={handleChartsClick} className="text-lg font-semibold text-teal-400 py-3 px-6 hover:bg-[#17202e] hover:underline rounded">

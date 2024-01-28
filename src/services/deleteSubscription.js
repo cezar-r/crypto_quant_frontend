@@ -1,7 +1,5 @@
 const deleteSubscription = (subscriptionData) => {
-    console.log("Data");
-    console.log(subscriptionData);
-    const endpointURL = "https://cr4ectu1a1.execute-api.us-east-2.amazonaws.com/prod/deleteSubscription";
+    const endpointURL = process.env.REACT_APP_DELETE_SUB_URL;
     fetch(endpointURL, {
         method: 'POST',
         headers: {

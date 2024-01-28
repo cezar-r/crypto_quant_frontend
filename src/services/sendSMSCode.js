@@ -1,5 +1,5 @@
 const sendSMSCode = async (payload) => {
-    const endpointURL = "https://0jsryuliel.execute-api.us-east-2.amazonaws.com/prod/sendSMSCode";
+    const endpointURL = process.env.REACT_APP_SEND_SMS_CODE_URL;
     fetch(endpointURL, {
         method: 'POST',
         headers: {

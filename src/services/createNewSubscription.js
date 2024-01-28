@@ -1,6 +1,6 @@
 const createNewSubscription = (subscriptionData) => {
     console.log(subscriptionData);
-    const endpointURL = "https://74m5u6odbf.execute-api.us-east-2.amazonaws.com/prod/subscription";
+    const endpointURL = process.env.REACT_APP_NEW_SUB_URL;
     fetch(endpointURL, {
         method: 'POST',
         headers: {
