@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 
 import {riskToColor, riskToColorTransparency} from './helpers/riskToColor';
+import TickerImage from './TickerImage';
 import NewAlertPopup from './NewAlertPopup';
 import tickerToNameMapper from './helpers/mapTickerToName';
 import ThresholdIndicator from './ThresholdIndicator';
@@ -48,7 +49,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: '1.05rem',
     padding: "14px",
     borderBottom: "1px solid rgba(255, 255, 255, 0.12)"
-
 }));
 
 const StyledTableCellGrayText = styled(TableCell)(({ theme }) => ({
@@ -63,6 +63,9 @@ const StyledHeaderCell = styled(StyledTableCell)(({ theme }) => ({
     fontSize: '0.9rem',
     padding: "16px",
     fontWeight: "bold",
+    '&:hover': {
+        cursor: 'pointer', 
+      },
 }));
 
 
@@ -121,6 +124,32 @@ const DashboardTable = ({data, userData, newAlertPopup, setNewAlertPopup, handle
 
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedSubscription, setSelectedSubscription] = useState(null);
+    const [sortedData, setSortedData] = useState(data);
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+
+    useEffect(() => {
+        let sortableItems = [...data];
+        if (sortConfig.key !== null) {
+            sortableItems.sort((a, b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (a[sortConfig.key] > b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        setSortedData(sortableItems);
+    }, [data, sortConfig]);
+
+    const requestSort = (key) => {
+        let direction = 'ascending';
+        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
 
     const handleClickOpen = (subscription) => {
         setSelectedSubscription(subscription);
@@ -138,31 +167,34 @@ const DashboardTable = ({data, userData, newAlertPopup, setNewAlertPopup, handle
     };
     
     const dashboardData = data;
+    console.log(dashboardData);
     if (dashboardData.length > 0) {
         return (
                 <StyledTableContainer component={Paper}>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <StyledHeaderCell>#</StyledHeaderCell>
-                                <StyledHeaderCell>Ticker</StyledHeaderCell>
-                                <StyledHeaderCell align="right">Price</StyledHeaderCell>
-                                <StyledHeaderCell align="right">Risk Threshold</StyledHeaderCell>
-                                <StyledHeaderCell align="right">Current Risk</StyledHeaderCell>
-                                <StyledHeaderCell align="right">24h %</StyledHeaderCell>
-                                <StyledHeaderCell align="right">7d %</StyledHeaderCell>
-                                <StyledHeaderCell align="left"></StyledHeaderCell>
+                            <StyledHeaderCell onClick={() => requestSort(null)}>#</StyledHeaderCell>
+                            <StyledHeaderCell onClick={() => requestSort('ticker')}>Ticker</StyledHeaderCell>
+                            <StyledHeaderCell align="right" onClick={() => requestSort('price')}>Price</StyledHeaderCell>
+                            <StyledHeaderCell align="right" onClick={() => requestSort('threshold')}>Risk Threshold</StyledHeaderCell>
+                            <StyledHeaderCell align="right" onClick={() => requestSort('current_risk')}>Current Risk</StyledHeaderCell>
+                            <StyledHeaderCell align="right" onClick={() => requestSort('24hr_pct_change')}>24h %</StyledHeaderCell>
+                            <StyledHeaderCell align="right" onClick={() => requestSort('7d_pct_change')}>7d %</StyledHeaderCell>
+                            <StyledHeaderCell align="left"></StyledHeaderCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {dashboardData.map((subscription, index) => (
+                            {sortedData.map((subscription, index) => (
                             <StyledTableRow key={subscription.id}>
                                 <StyledTableCellBold component="th" scope="row">
                                 {index + 1}
                                 </StyledTableCellBold>
                                 <StyledTableCellBold>
-                                    {/* <Avatar src={coin.image} sx={{ width: 24, height: 24, mr: 1 }} /> */}
-                                    {tickerToNameMapper[subscription.ticker]}
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <TickerImage ticker={subscription.ticker} />
+                                        <span style={{ marginLeft: '8px' }}>{tickerToNameMapper[subscription.ticker]}</span>
+                                    </div>
                                 </StyledTableCellBold>
                                 <StyledTableCellGrayText align="right">
                                     ${subscription.price}
@@ -271,12 +303,9 @@ export default DashboardTable;
 
 
 /**
- * send text message API
- * sms verify
- * 
- * add coin images next to each name
- * sort table by table headers
+ * add feature for maxing out messages sent
  * 
  * create domain and get site registered
- * use localstorage to remember user
+ *      put env variables
+ *      push all changes to git
  */

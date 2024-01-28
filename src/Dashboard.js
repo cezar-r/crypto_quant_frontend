@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NewAlertPopup from './components/NewAlertPopup';
+import { Skeleton } from '@mui/material';
 import createNewSubscription from './services/createNewSubscription';
 import deleteSubscription from './services/deleteSubscription';
 import getDashboardDataForUser from './services/getDashboardDataForUser';
@@ -13,20 +14,21 @@ const Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    console.log(location.state.userData);
-
     const userData = JSON.parse(location.state.userData);
+    
     const [dashboardData, setDashboardData] = useState([]);
     const [staticData, setStaticData] = useState([]);
     const [newAlertPopup, setNewAlertPopup] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
+    const [showLoading, setShowLoading] = useState(true);
 
 
     const fetchDashboardData = async () => {
+        setShowLoading(true);
         const data = await getDashboardDataForUser({ "user_data": userData });
         setDashboardData(data.tableData);
         setStaticData(data.staticData);
-        console.log(data);
+        setShowLoading(false);
     };
     
     useEffect(() => {
@@ -43,8 +45,6 @@ const Dashboard = () => {
     };
 
     const handleDeleteAlert = async (subscription) => {
-        console.log("Deleting");
-        console.log(subscription);
 
         const payload = {
             "subscription_id": subscription['id']
@@ -61,7 +61,6 @@ const Dashboard = () => {
             msgsPerDay: alertData['maxMessages'],
             ticker: alertData['ticker']
         };
-        console.log('Alert Data:', subscription);
     
         const payload = {
             "subscription_data": subscription
@@ -82,25 +81,36 @@ const Dashboard = () => {
             <div className="flex justify-between items-center p-4 ">
                 <h1 className="text-white text-4xl font-bold ml-16 mt-6">Dashboard</h1>
             </div>
-            <StaticRiskCards data={staticData} handleChartsClick={handleChartsClick}/>
-            <div className="flex justify-between items-center p-4 mb-4">
-                <h2 className="text-white text-3xl font-bold ml-20 mt-4">Alerts</h2>
+            {showLoading ? (
+                <div className="flex justify-between items-center p-4 ml-16 mr-16">
+                    {Array.from(new Array(5)).map((_, index) => (
+                        <Skeleton key={index} variant="rectangular" width={210} height={120} className="mr-4" />
+                    ))}
+                </div>
+            ) : (
+                <StaticRiskCards data={staticData} handleChartsClick={handleChartsClick} />
+            )}
+            <div className="flex justify-between items-center p-4 mb-2">
+                <h2 className="text-white text-3xl font-bold ml-20 mt-2">Alerts</h2>
                 <button onClick={handleNewAlertPopupOpen} 
                     className="bg-teal-400 hover:bg-teal-600 text-white text-2xl py-2 px-4 rounded-lg mr-16 shadow-lg hover:shadow-lg transition-shadow duration-300">
                     +
                 </button>
             </div>
-            <div className="mx-16">
-                <DashboardTable data={dashboardData} 
-                                userData={userData} 
-                                newAlertPopup={newAlertPopup}
-                                setNewAlertPopup={setNewAlertPopup}
-                                handleNewAlertPopupClose={handleNewAlertPopupClose}
-                                handleNewAlertPopupSave={handleNewAlertPopupSave}
-                                handleChartsClick={handleChartsClick}
-                                handleDeleteAlert={handleDeleteAlert}
-                                />
-            </div>
+            {showLoading ? (
+                <Skeleton variant="rectangular" width="90%" height={280} className="flex justify-center items-center mx-16" />
+            ) : (
+                <div className="mx-16">
+                    <DashboardTable data={dashboardData}
+                                    userData={userData}
+                                    newAlertPopup={newAlertPopup}
+                                    setNewAlertPopup={setNewAlertPopup}
+                                    handleNewAlertPopupClose={handleNewAlertPopupClose}
+                                    handleNewAlertPopupSave={handleNewAlertPopupSave}
+                                    handleChartsClick={handleChartsClick}
+                                    handleDeleteAlert={handleDeleteAlert} />
+                </div>
+            )}
             {newAlertPopup && (
                 <NewAlertPopup
                     onClose={handleNewAlertPopupClose}

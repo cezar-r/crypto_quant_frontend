@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import getCryptoPriceData from '../../services/getCryptoPriceData';
 import * as d3 from 'd3';
+import TickerImage from '../TickerImage';
 import { riskToColorTransparency, riskToColor } from '../helpers/riskToColor';
 import tickerToNameMapper from '../helpers/mapTickerToName';
 import Timeframe from './Timeframe';
 import "./tooltip.css";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const timeframeToDatapointsMapper = {
     "1M": 200,
@@ -19,6 +22,7 @@ const ChartView = ({ selectedTicker }) => {
     const [initialDataLoaded, setInitialDataLoaded] = useState(false);  
     const [fullData, setFullData] = useState([]);
     const [timeframe, setTimeframe] = useState('1M');
+    const [showSpinner, setShowSpinner] = useState(false);
 
     const fetchCryptoPriceData = async (ticker, limit = null) => {
         const args = limit ? { "ticker": ticker, "limit": limit } : { "ticker": ticker };
@@ -62,19 +66,25 @@ const ChartView = ({ selectedTicker }) => {
         // Create a tooltip in the body of the document
         const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
-            .style("opacity", 0);
-    
+            .style("opacity", 0)
+            .style("color", "white")
+            .style("background-color", "rgba(33, 33, 33, 0.9)") // Darker gray background
+            .style("padding", "10px")
+            .style("border-radius", "5px");
+
         // Define the mouse event handlers
         const mouseover = function(event, d) {
             tooltip.style("opacity", 1);
         };
-    
+
         const mousemove = function(event, d) {
-            tooltip.html(`Price: ${d.close}<br/>Risk: ${d.risk_score.toFixed(2)}`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY + 10) + "px");
+            const formatDate = d3.timeFormat("%B %d, %Y");
+            tooltip.html(`Price: $${d.close}<br/>Risk: ${d.risk_score.toFixed(2)}<br/>${formatDate(new Date(d.timestamp))}`)
+                .style("left", (event.pageX - 60) + "px")
+                .style("top", (event.pageY - 80) + "px")
+                .style("border", `2px solid ${riskToColor(d.risk_score)}`); // Dynamic border color based on risk
         };
-    
+
         const mouseout = function(event, d) {
             tooltip.style("opacity", 0);
         };
@@ -104,10 +114,12 @@ const ChartView = ({ selectedTicker }) => {
 
     useEffect(() => {
         if (selectedTicker && d3Container.current) {
+            setShowSpinner(true);
             fetchCryptoPriceData(selectedTicker, timeframeToDatapointsMapper[timeframe] + 20).then(data => {
-                drawChart(data);
                 setFullData(data); 
                 setInitialDataLoaded(true);
+                drawChart(data);
+                setShowSpinner(false);
             });
 
             if (initialDataLoaded) {
@@ -119,18 +131,22 @@ const ChartView = ({ selectedTicker }) => {
     }, [selectedTicker, initialDataLoaded]);
 
     useEffect(() => {
-        console.log(fullData);
         if (fullData.length > 0) {
             drawChart(fullData);
         }
     }, [fullData]);
 
+    console.log(initialDataLoaded);
+
     return (
-        <div className='bg-gray-800 h-screen overflow-y-auto'>
+        <div className='bg-gray-800 h-screen overflow-y-auto mr-6'>
             <div className="bg-gray-900 text-white h-1/5 p-4">
                 <h2 className="text-white text-3xl font-bold ml-4 ">Historical Risk Levels</h2>
-                <div className='flex justify-between center-items'>
-                    <h2 className="text-white text-xl font-semibold ml-4 mt-8">{tickerToNameMapper[selectedTicker]} ({selectedTicker})</h2>
+                <div className='flex justify-between items-center'>
+                    <div className="flex items-center ml-4 mt-8">
+                        <TickerImage ticker={selectedTicker} dim={"30"}/>
+                        <h2 className="text-white text-2xl font-semibold ml-2">{tickerToNameMapper[selectedTicker]} ({selectedTicker})</h2>
+                    </div>
                     <Timeframe handleTimeframeChange={handleTimeframeChange} curTimeframe={timeframe}/>
                 </div>
                 <div className='flex justify-start center-items mt-1 mb-12'>
@@ -144,8 +160,13 @@ const ChartView = ({ selectedTicker }) => {
                 </div>
 
             </div>      
-            <div className="bg-gray-900 text-white h-2/3 p-4">
-                <svg className="w-full h-full" ref={d3Container}></svg>
+            <div className="bg-gray-900 text-white h-2/3 p-4 flex justify-center items-center">
+                {showSpinner ? (
+                    <CircularProgress /> // Display the spinning loading icon
+                ) : 
+                (
+                    <svg className="w-full h-full" ref={d3Container}></svg>
+                )}
             </div>
         </div>
     );

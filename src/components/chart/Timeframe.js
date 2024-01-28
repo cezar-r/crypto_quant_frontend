@@ -8,7 +8,7 @@ const Timeframe = ({ handleTimeframeChange, curTimeframe }) => {
             {timeframes.map((timeframe) => {
                 const isActive = timeframe === curTimeframe || (timeframe === "All" && curTimeframe === "*");
 
-                const buttonClasses = `hover:bg-gray-400 text-white font-semibold px-3 text-xs rounded mt-8 ${
+                const buttonClasses = `hover:bg-gray-400 text-white font-semibold px-5 text-xs rounded mt-4 py-2 ${
                     isActive ? 'bg-teal-600' : 'bg-gray-700'
                 }`;
 
