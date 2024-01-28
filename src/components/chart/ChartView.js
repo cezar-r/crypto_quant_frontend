@@ -143,7 +143,10 @@ const ChartView = ({ selectedTicker }) => {
                 <div className='flex justify-between items-center'>
                     <div className="flex items-center ml-4 mt-8">
                         <TickerImage ticker={selectedTicker} dim={"30"}/>
-                        <h2 className="text-white text-2xl font-semibold ml-2">{tickerToNameMapper[selectedTicker]} ({selectedTicker})</h2>
+                        <div className='flex justify-start items-center'>
+                            <h2 className="text-white text-2xl font-semibold ml-2">{tickerToNameMapper[selectedTicker]}</h2>
+                            <h4 className="ml-2 mt-2 text-xs text-gray-500 font-semibold">{selectedTicker}</h4>
+                        </div>
                     </div>
                     <Timeframe handleTimeframeChange={handleTimeframeChange} curTimeframe={timeframe}/>
                 </div>

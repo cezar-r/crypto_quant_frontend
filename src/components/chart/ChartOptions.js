@@ -41,7 +41,7 @@ const ChartOptions = ({ selectedTicker, onTickerSelect }) => {
                 {options.map((ticker) => (
                     <div
                         key={ticker}
-                        className={`flex items-center p-2 ${selectedTicker === ticker ? 'bg-gray-600' : 'bg-gray-700'} my-2 text-white rounded cursor-pointer hover:bg-gray-900`}
+                        className={`flex items-center p-2 ${selectedTicker === ticker ? 'bg-gray-600 font-semibold' : 'bg-gray-700'} my-2 text-white rounded cursor-pointer hover:bg-gray-900`}
                         onClick={() => onTickerSelect(ticker)}
                     >
                         <TickerImage ticker={ticker} dim={"15"}/>
