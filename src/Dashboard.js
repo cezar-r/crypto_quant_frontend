@@ -28,7 +28,7 @@ const Dashboard = () => {
     const [showLoading, setShowLoading] = useState(true);
     
     useEffect(() => {
-        if (!userData) {
+        if (!userData || typeof userData === "string") {
             navigate('/');
         } else {
             const fetchDashboardData = async () => {

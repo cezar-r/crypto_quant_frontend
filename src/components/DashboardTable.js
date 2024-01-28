@@ -298,12 +298,3 @@ const DashboardTable = ({data, userData, newAlertPopup, setNewAlertPopup, handle
 }
 
 export default DashboardTable;
-
-
-/**
- * add feature for maxing out messages sent
- * 
- * create domain and get site registered
- *      put env variables
- *      push all changes to git
- */

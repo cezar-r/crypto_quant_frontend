@@ -19,7 +19,7 @@ const Charts = () => {
     const [userData, setUserData] = useState(initialUserData);
 
     useEffect(() => {
-        if (!userData) {
+        if (!userData || typeof userData === "string") {
             navigate('/');
         }
     }, [userData, navigate]);
