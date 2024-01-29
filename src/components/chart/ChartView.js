@@ -5,6 +5,7 @@ import TickerImage from '../TickerImage';
 import { riskToColorTransparency, riskToColor } from '../helpers/riskToColor';
 import tickerToNameMapper from '../helpers/mapTickerToName';
 import Timeframe from './Timeframe';
+import ChartScale from './ChartScale';
 import "./tooltip.css";
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -23,6 +24,7 @@ const ChartView = ({ selectedTicker }) => {
     const [fullData, setFullData] = useState([]);
     const [timeframe, setTimeframe] = useState('1M');
     const [showSpinner, setShowSpinner] = useState(false);
+    const [scale, setScale] = useState('Linear');
 
     const fetchCryptoPriceData = async (ticker, limit = null) => {
         const args = limit ? { "ticker": ticker, "limit": limit } : { "ticker": ticker };
@@ -48,20 +50,31 @@ const ChartView = ({ selectedTicker }) => {
         const minValue = d3.min(data, d => d.close);
         const maxValue = d3.max(data, d => d.close);
     
-        const y = d3.scaleLinear()
-            .domain([minValue * 0.95, maxValue])
-            .range([height, 0]);
+        const y = scale === 'Log' ? 
+            d3.scaleLog().domain([minValue * 0.95, maxValue * 1.025]).range([height, 0]) :
+            d3.scaleLinear().domain([minValue * 0.95, maxValue * 1.025]).range([height, 0]);
+
     
         const colorScale = d => riskToColorTransparency(d.risk_score, 0.8);
     
         const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
     
+        const formatTick = (d) => {
+            if (d < 1) {
+                // For values less than 1, format as decimal without the SI prefix
+                return d3.format(".2f")(d);
+            } else {
+                // For values greater than or equal to 1, use the default format
+                return d3.format(".2s")(d);
+            }
+        };
+        
         g.append("g")
             .attr("transform", `translate(0,${height})`)
             .call(d3.axisBottom(x));
     
         g.append("g")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y).tickFormat(formatTick));
     
         // Create a tooltip in the body of the document
         const tooltip = d3.select("body").append("div")
@@ -103,13 +116,21 @@ const ChartView = ({ selectedTicker }) => {
     };
     
 
-    const handleTimeframeChange = (timeframe) => {
-        setTimeframe(timeframe);
+    const handleTimeframeChange = (newTimeframe) => {
+        setTimeframe(newTimeframe);
+    }
+
+    const handleScaleChange = (newScale) => {
+        setScale(newScale);
     }
 
     useEffect(() => {
-        drawChart(fullData);
-    }, [timeframe])
+        drawChart(fullData, scale);
+    }, [fullData]);
+
+    useEffect(() => {
+        drawChart(fullData, scale);
+    }, [timeframe, scale])
     
 
     useEffect(() => {
@@ -141,23 +162,28 @@ const ChartView = ({ selectedTicker }) => {
             <div className="bg-gray-900 text-white h-1/5 p-4">
                 <h2 className="text-white text-3xl font-bold ml-4 ">Historical Risk Levels</h2>
                 <div className='flex justify-between items-center'>
-                    <div className="flex items-center ml-4 mt-8">
-                        <TickerImage ticker={selectedTicker} dim={"30"}/>
-                        <div className='flex justify-start items-center'>
-                            <h2 className="text-white text-2xl font-semibold ml-2">{tickerToNameMapper[selectedTicker]}</h2>
-                            <h4 className="ml-2 mt-2 text-xs text-gray-500 font-semibold">{selectedTicker}</h4>
+                    <div className="flex flex-col justify-start mt-4 mb-2">
+                        <div className="flex items-center ml-4 mt-3">
+                            <TickerImage ticker={selectedTicker} dim={"30"}/>
+                            <div className='flex justify-start items-center'>
+                                <h2 className="text-white text-2xl font-semibold ml-2">{tickerToNameMapper[selectedTicker]}</h2>
+                                <h4 className="ml-2 mt-2 text-xs text-gray-500 font-semibold">{selectedTicker}</h4>
+                            </div>
+                        </div>
+                        <div className='flex justify-start center-items'>
+                            {fullData.length > 0 && <h2 className="text-white text-3xl font-bold ml-4 mt-3">${fullData[fullData.length-1].close}</h2>}
+                            {fullData.length > 0 && 
+                            <div className="flex pt-2 ml-4 mt-1">
+                                <span className="px-2 py-2 rounded-md" style={{ backgroundColor: riskToColorTransparency(fullData[fullData.length-1].risk_score), color: riskToColor(fullData[fullData.length-1].risk_score) }}>
+                                    <p className="font-bold text-large">{`${fullData[fullData.length-1].risk_score.toFixed(2)}`}</p>
+                                </span>
+                            </div>}
                         </div>
                     </div>
-                    <Timeframe handleTimeframeChange={handleTimeframeChange} curTimeframe={timeframe}/>
-                </div>
-                <div className='flex justify-start center-items mt-1 mb-12'>
-                    {fullData.length > 0 && <h2 className="text-white text-3xl font-bold ml-4 mt-3">${fullData[fullData.length-1].close}</h2>}
-                    {fullData.length > 0 && 
-                    <div className="flex pt-2 ml-4 mt-1">
-                        <span className="px-2 py-2 rounded-md" style={{ backgroundColor: riskToColorTransparency(fullData[fullData.length-1].risk_score), color: riskToColor(fullData[fullData.length-1].risk_score) }}>
-                            <p className="font-bold text-large">{`${fullData[fullData.length-1].risk_score.toFixed(2)}`}</p>
-                        </span>
-                    </div>}
+                    <div className="flex flex-col items-end mb-6"> 
+                        <ChartScale handleScaleChange={handleScaleChange} curScale={scale}/>
+                        <Timeframe handleTimeframeChange={handleTimeframeChange} curTimeframe={timeframe}/>
+                    </div>
                 </div>
 
             </div>      
