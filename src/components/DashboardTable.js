@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Fab, Typography, IconButton, Box } from '@mui/material';
@@ -85,22 +85,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         backgroundColor: "#17202e",
     },
 }));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(1),
-  border: 'none', 
-}));
-
-const StyledDeleteButton = styled(Button)(({ theme }) => ({
-    margin: theme.spacing(1),
-    backgroundColor: '#ff1c1c',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#b50b0b',
-      border: 'none', 
-    },
-    border: 'none', 
-  }));
 
 const CenteredContainer = styled('div')(({ theme }) => ({
     display: 'flex',
