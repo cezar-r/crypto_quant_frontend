@@ -90,7 +90,7 @@ const Dashboard = () => {
                 <h1 className="text-white text-4xl font-bold ml-16 mt-6">Dashboard</h1>
             </div>
             {showLoading ? (
-                <div className="flex justify-between items-center p-4 ml-16 mr-16">
+                <div className="flex justify-between items-center p-4 ml-16 mr-16 mb-8">
                     {Array.from(new Array(5)).map((_, index) => (
                         <Skeleton key={index} variant="rectangular" width={210} height={120} className="mr-4" />
                     ))}
@@ -106,7 +106,7 @@ const Dashboard = () => {
                 </button>
             </div>
             {showLoading ? (
-                <Skeleton variant="rectangular" width="90%" height={280} className="flex justify-center items-center mx-16" />
+                <Skeleton variant="rectangular" width="90%" height={280} className="flex justify-center items-center mx-16 mt-3" />
             ) : (
                 <div className="mx-16">
                     <DashboardTable data={dashboardData}
