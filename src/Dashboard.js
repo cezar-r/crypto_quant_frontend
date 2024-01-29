@@ -66,7 +66,7 @@ const Dashboard = () => {
             phoneNumber: userData.phoneNumber,
             id: generateUUID(),
             threshold: alertData['riskThreshold'].toString(),
-            msgsPerDay: alertData['maxMessages'],
+            msgsPerDay: Math.round(alertData['maxMessages']),
             ticker: alertData['ticker']
         };
     
